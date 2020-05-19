@@ -1,0 +1,30 @@
+To Evaluate security impact of Temporal Debloating:
+
+1. Generate set of blocked system calls for every application via Library
+specialization and add it to a file: removedViaLibSpecialization.txt
+in format
+	[Application_Name]:syscall1,syscall2,..
+2. Generate set of blocked system calls for every application via Temporal
+Debloating and add it to a file: removedViaTemporalDebloating.txt
+in format
+	[Application_Name]:syscall1,syscall2,..
+
+3. List of Shellcode exploits with their IDs and used system calls is in 
+syscallsPerPayload.txt .
+4. To get number of shellcodes broken by Library Specialization vs those broken
+by Temporal Debloating, run
+	python getBlockedPayloads.py
+
+After running: 
+List of shellcode IDs broken by Lib Specialization: resultViaLibSpecialization.txt
+List of shellcode IDs broken by Temporal Debloating: resultViaTemporalDebloating.txt
+
+5. List of ROP exploits with their IDs and used system calls is in 
+syscallsPerPayloadROP.txt .
+6. To get number of ROP payloads broken by Library Specialization vs those broken
+by Temporal Debloating, run
+	python getBlockedPayloadsROP.py
+
+After running:
+List of ROP payloads broken by Lib Specialization: resultViaLibSpecializationROP.txt
+List of ROP payloads broken by Temporal Debloating: resultViaTemporalDebloatingROP.txt
