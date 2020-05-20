@@ -201,6 +201,15 @@ phase.
 We suppose all call graphs are stored in a specific folder. The name of each
 call graph is specified in the JSON file.
 
+**--singleappname**
+The main JSON file has the option of enabling and disabling each application.
+But in case you only want to run the analysis for one application without
+modifying the JSON file, you can use this option and pass the name of your
+requested application. The tool will only analyze this single application
+bypassing the enable setting in the JSON file. The rest of the settings for
+the application will still be read from the JSON file.
+
+
 ## Security Evaluation
 
 For security evaluation, we collected a set of 547 shellcodes payloads and 17 
