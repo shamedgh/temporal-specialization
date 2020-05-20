@@ -1,4 +1,4 @@
-# Temporal Debloating
+# Temporal Specialization Artifacts
 
 This repository can be used to develop specialized system call filters for
 server applications based on their phase of execution. We differ between the
