@@ -13,7 +13,10 @@ in format
 syscallsPerPayload.txt .
 4. To get number of shellcodes broken by Library Specialization vs those broken
 by Temporal Debloating, run
-	python getBlockedPayloads.py
+	python getBlockedPayloads.py [--blockedSyscallFile <FileName>]
+
+FileName contains list of payloads blocked by Temporal Specialization.
+If no file is specified, by default it runs evaluation for all applications.
 
 After running: 
 List of shellcode IDs broken by Lib Specialization: resultViaLibSpecialization.txt
@@ -23,7 +26,10 @@ List of shellcode IDs broken by Temporal Debloating: resultViaTemporalDebloating
 syscallsPerPayloadROP.txt .
 6. To get number of ROP payloads broken by Library Specialization vs those broken
 by Temporal Debloating, run
-	python getBlockedPayloadsROP.py
+	python getBlockedPayloadsROP.py [--blockedSyscallFile <FileName>]
+
+FileName contains list of payloads blocked by Temporal Specialization.
+If no file is specified, by default it runs evaluation for all applications.
 
 After running:
 List of ROP payloads broken by Lib Specialization: resultViaLibSpecializationROP.txt
