@@ -3,6 +3,12 @@ FROM ubuntu
 ENV NUM_CORES 8
 ENV ROOT /debloating-vol
 ENV GIT_REPO temporal-specialization-artifacts
+ENV GIT_REPO_URL https://github.com/shamedgh/temporal-specialization-artifacts.git
+
+# Override these when launching the container
+ENV BC my_bitcode
+ENV ENTRY my_func
+
 
 RUN mkdir $ROOT 
 
@@ -14,7 +20,7 @@ RUN apt install -y vim python3
 
 # Clone the repo
 WORKDIR $ROOT 
-RUN git clone https://github.com/shamedgh/temporal-specialization-artifacts.git
+RUN git clone $GIT_REPO_URL
 WORKDIR $ROOT/$GIT_REPO
 
 # Build LLVM
@@ -34,19 +40,9 @@ RUN ./build.sh
 WORKDIR $ROOT/$GIT_REPO/SVF/Release-build
 RUN cp $ROOT/$GIT_REPO/SVF/Release-build/bin/* /usr/bin/
 
-# Get the scripts
-# HACK: assumes that the temporal-debloating project is cloned in the same directory as Dockerfile
-# TODO: Merge later
-RUN mkdir $ROOT/temporal-scripts
-COPY temporal-debloating $ROOT/temporal-scripts
-WORKDIR $ROOT/temporal-scripts
-
 # Copy the parameterized run.sh into the container
-COPY run.sh $ROOT/temporal-scripts
+WORKDIR $ROOT/$GIT_REPO
+COPY run.sh $ROOT/$GIT_REPO
 RUN chmod u+x run.sh
-
-# Override these when launching the container
-ENV BC my_bitcode
-ENV ENTRY my_func
 
 CMD ./run.sh $BC $ENTRY

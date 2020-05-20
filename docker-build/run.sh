@@ -3,7 +3,7 @@
 # Usage:
 # ./run.sh <bc_file> <entrypoint>
 # Example: 
-# ./run.sh memcached
+# ./run.sh memcached worker_libevent
 
 if [ "$#" -ne 2 ]; then
     echo "Usage: ./run.sh <bc_file_name> <entrypoint>"
@@ -12,6 +12,8 @@ fi
 
 BC=$1
 ENTRY=$2
+
+APP="$(cut -d'.' -f1 <<< $BC)"
 
 set -x
 
@@ -29,5 +31,5 @@ python3 python-utils/graphCleaner.py --fpanalysis --funcname $ENTRY --output $BC
 
 mkdir outputs
 mkdir stats
-python3 createSyscallStats.py -c ./callgraphs/glibc.callgraph --apptopropertymap app.to.properties.json --binpath ./binaries --outputpath outputs/ --apptolibmap app.to.lib.map.json --sensitivesyscalls sensitive.syscalls --sensitivestatspath stats/sensitive.stats --syscallreductionpath stats/syscallreduction.stats --libdebloating --othercfgpath ./otherCfgs/ --cfgpath callgraphs
+python3 createSyscallStats.py -c ./callgraphs/glibc.callgraph --apptopropertymap app.to.properties.json --binpath ./binaries --outputpath outputs/ --apptolibmap app.to.lib.map.json --sensitivesyscalls sensitive.syscalls --sensitivestatspath stats/sensitive.stats --syscallreductionpath stats/syscallreduction.stats --libdebloating --othercfgpath ./otherCfgs/ --cfgpath callgraphs --singleappname $APP
 
