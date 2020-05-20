@@ -1,6 +1,6 @@
 {
-    "sec-eval-lib-output": "removedViaLibSpecialization.txt",
-    "sec-eval-temporal-output": "removedViaTemporalDebloating.txt",
+    "sec-eval-lib-output": "security-evaluation/removedViaLibSpecialization.txt",
+    "sec-eval-temporal-output": "security-evaluation/removedViaTemporalDebloating.txt",
     "apps": [
         {
             "httpd": 
