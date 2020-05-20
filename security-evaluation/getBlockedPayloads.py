@@ -1,3 +1,12 @@
+import argparse
+import sys,os
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--blockedSyscallFile", type=str, nargs='?', default="removedViaTemporalDebloating.txt")
+args = parser.parse_args()
+
 payloadFileName = "syscallsPerPayload.txt"
 openport = {151, 154, 156, 157, 158, 163, 164, 165, 166, 167, 168, 173, 175, 176, 177, 178, 179, 180, 187, 188, 189, 190, 191, 192, 197, 198, 199, 200, 201, 889, 884, 870, 978, 858, 873,882,881,872,852,847,837,836,835,804,238,684,259,832,834,253,252,965,672,217,357,481,370,501,553,656,655,678,679,366,209,235,515,559}
 connect = {152, 153,155,159,169, 170,171,172,174, 181,182,183, 184, 185, 193,194,195,196, 202,907,895,890,871,859,857,552,367,206,883,849,838,207,239,685,208,833,771,242,964}
@@ -10,7 +19,7 @@ connectCount = 0
 fileOpsCount = 0
 executeCount = 0
 totalCount = 0
-with open(payloadFileName) as payloadFilePtr:
+with open(os.path.join(__location__, payloadFileName)) as payloadFilePtr:
 	line1 = payloadFilePtr.readline()
 	while line1:
 		totalCount+=1
@@ -38,122 +47,81 @@ fileOpsCountDiv = (float(fileOpsCount))/100
 executeCountDiv = (float(executeCount))/100
 
 print("\t\t\t\t-------------------------------------------------------")
-print("\t\t\t\t\t\tTotal payload count: " + str(totalCount))
+print("\t\t\t\t\t\tTotal Shellcode count: " + str(totalCount))
 print("\t\t\t\t-------------------------------------------------------")
 print("\t\t\t\tOpenPort\tConnect\t\tExecute\t\tFileOps")
 print("\t\t\t\t("+str(openportCount)+")\t\t("+str(connectCount)+")\t\t("+str(executeCount)+")\t\t(" + str(fileOpsCount)+")")
 print("\t\t\t\t-------------------------------------------------------")
 
+appsToTest=[]
+with open(os.path.join(__location__, args.blockedSyscallFile)) as blockSys:
+    line=blockSys.readline()
+    while line: 
+	appsToTest.append(line.split(":")[0].strip())
+        line=blockSys.readline()
+	
+
+def get_blocked_payloads(blockedSysCallFile, resultFile):
+    result = open(resultFile,"w")
+    with open(os.path.join(__location__, blockedSysCallFile)) as blockSys:
+        line=blockSys.readline()
+        while line:
+            app = line.split(":")[0].strip()
+            if app not in appsToTest:
+                line=blockSys.readline()
+                continue
+            print("=== " + app + " ===");
+            count = 0
+            blockedSyscallsInApp = line.split(":")[1].strip().split(",")
+            result.write(app)
+            result.write(":")
+            openportCount = 0
+            connectCount = 0
+            fileOpsCount = 0
+            executeCount = 0
+            with open(os.path.join(__location__, payloadFileName)) as payloadFilePtr:
+                line1 = payloadFilePtr.readline().strip()
+                while line1:
+                    payload = line1.split(" ")[0][:-1]
+                    usedSyscallsInPayload = line1.split(" ")[1].strip().split(",")
+                    payloadIndex = 0
+                    while payloadIndex < len(usedSyscallsInPayload):
+                        if usedSyscallsInPayload[payloadIndex] in blockedSyscallsInApp:
+                            basePayload = payload[:3]
+                            if int(basePayload) in openport:
+                               openportCount+=1;
+                            elif int(basePayload) in connect:
+				        		    	      connectCount+=1;
+                            elif int(basePayload) in fileOps:
+                                fileOpsCount+=1;
+                            elif int(basePayload) in execute:
+                                executeCount+=1;
+                            result.write(payload)
+                            result.write(",")
+                            count += 1
+                            break
+                        else:
+                            payloadIndex+=1
+                    line1 = payloadFilePtr.readline();				
+            result.write("("+str(count)+")" + "["+str(openportCount) + "," + str(connectCount) + "," + str(executeCount) + "," + str(fileOpsCount) + "]" )
+            print("Blocked:("+str(count)+")\t\t\t" + "["+str(openportCount) + ",\t\t" + str(connectCount) + ",\t\t" + str(executeCount) + ",\t\t" + str(fileOpsCount) + "]" )
+            print("Percentage:("+str(round(count/totalCountDiv,2))+")\t\t" + "["+str(round(openportCount/openportCountDiv,2)) + ",\t\t" + str(round(connectCount/connectCountDiv,2)) + ",\t\t" + str(round(executeCount/executeCountDiv,2)) + ",\t\t" + str(round(fileOpsCount/fileOpsCountDiv,2)) + "]\n" )
+            payloadFilePtr.close()
+            line=blockSys.readline()
+    blockSys.close()
+
+
 print("===================================")
 print("=== Via Library Specialization ====")
 print("===================================")
 
-blockedSysCallFile = "removedViaLibSpecialization.txt"
-result = open("resultViaLibSpecialization.txt","w")
-with open(blockedSysCallFile) as blockSys:
-	line=blockSys.readline()
-	while line: 
-		app = line.split(":")[0].strip()
-		print("=== " + app + " ===");
-		count = 0
-		blockedSyscallsInApp = line.split(":")[1].strip().split(",")
-		result.write(app)
-		result.write(":")
-		openportCount = 0
-		connectCount = 0
-		fileOpsCount = 0
-		executeCount = 0
-		with open(payloadFileName) as payloadFilePtr:
-			line1 = payloadFilePtr.readline().strip()
-			while line1:
-				payload = line1.split(" ")[0][:-1]
-				usedSyscallsInPayload = line1.split(" ")[1].strip().split(",")
-				payloadIndex = 0
-				#if len(basePayload) == 1:
-				#	line1 = payloadFilePtr.readline()
-				#	continue;
-				while payloadIndex < len(usedSyscallsInPayload):
-					if usedSyscallsInPayload[payloadIndex] in blockedSyscallsInApp:
-						#Attack is prevented
-						#print("Blocked " + payload + " in " + app + " Missing: " + usedSyscallsInPayload[payloadIndex])
-						
-						#print(payload +  " Missing: " + usedSyscallsInPayload[payloadIndex])
-						basePayload = payload[:3]
-						if int(basePayload) in openport:
-							openportCount+=1;
-						if int(basePayload) in connect:
-							connectCount+=1;
-						if int(basePayload) in fileOps:
-							fileOpsCount+=1;
-						if int(basePayload) in execute:
-							executeCount+=1;
-						result.write(payload)
-						result.write(",")
-						count += 1
-						break
-					else: 
-						payloadIndex+=1
-				line1 = payloadFilePtr.readline();				
-		result.write("("+str(count)+")" + "["+str(openportCount) + "," + str(connectCount) + "," + str(executeCount) + "," + str(fileOpsCount) + "]" )
-                print("Blocked:("+str(count)+")\t\t\t" + "["+str(openportCount) + ",\t\t" + str(connectCount) + ",\t\t" + str(executeCount) + ",\t\t" + str(fileOpsCount) + "]" )
-		print("Percentage:("+str(round(count/totalCountDiv,2))+")\t\t" + "["+str(round(openportCount/openportCountDiv,2)) + ",\t\t" + str(round(connectCount/connectCountDiv,2)) + ",\t\t" + str(round(executeCount/executeCountDiv,2)) + ",\t\t" + str(round(fileOpsCount/fileOpsCountDiv,2)) + "]" )
-		result.write("\n")
-		payloadFilePtr.close()
-		line=blockSys.readline()
-blockSys.close()
+
+get_blocked_payloads("removedViaLibSpecialization.txt","resultViaLibSpecialization.txt")
 
 print("================================")
 print("=== Via Temporal Debloating ====")
 print("================================")
 
-blockedSysCallFile = "removedViaTemporalDebloating.txt"
-result = open("resultViaTemporalDebloating.txt","w")
-with open(blockedSysCallFile) as blockSys:
-	line=blockSys.readline()
-	while line: 
-		app = line.split(":")[0].strip()
-		print("=== " + app + " ===")
-		count = 0
-		blockedSyscallsInApp = line.split(":")[1].strip().split(",")
-		result.write(app)
-		result.write(":")
-		openportCount = 0
-		connectCount = 0
-		fileOpsCount = 0
-		executeCount = 0
-		with open(payloadFileName) as payloadFilePtr:
-			line1 = payloadFilePtr.readline().strip()
-			while line1:
-				payload = line1.split(" ")[0][:-1]
-				usedSyscallsInPayload = line1.split(" ")[1].strip().split(",")
-				payloadIndex = 0
-				while payloadIndex < len(usedSyscallsInPayload):
-					if usedSyscallsInPayload[payloadIndex] in blockedSyscallsInApp:
-						#Attack is prevented
-						#print("Blocked " + payload + " in " + app + " Missing: " + usedSyscallsInPayload[payloadIndex])
-						
-						#print(payload +  " Missing: " + usedSyscallsInPayload[payloadIndex])
-						basePayload = payload[:3]
-						if int(basePayload) in openport:
-							openportCount+=1;
-						if int(basePayload) in connect:
-							connectCount+=1;
-						if int(basePayload) in fileOps:
-							fileOpsCount+=1;
-						if int(basePayload) in execute:
-							executeCount+=1;
-						result.write(payload)
-						result.write(",")
-						count += 1
-						break
-					else: 
-						payloadIndex+=1
-				line1 = payloadFilePtr.readline();				
-		result.write("("+str(count)+")" + "["+str(openportCount) + "," + str(connectCount) + "," + str(executeCount) + "," + str(fileOpsCount) + "]" )
-                print("Blocked:("+str(count)+")\t\t\t" + "["+str(openportCount) + ",\t\t" + str(connectCount) + ",\t\t" + str(executeCount) + ",\t\t" + str(fileOpsCount) + "]" )
-		print("Percentage:("+str(round(count/totalCountDiv,2))+")\t\t" + "["+str(round(openportCount/openportCountDiv,2)) + ",\t\t" + str(round(connectCount/connectCountDiv,2)) + ",\t\t" + str(round(executeCount/executeCountDiv,2)) + ",\t\t" + str(round(fileOpsCount/fileOpsCountDiv,2)) + "]" )
-		result.write("\n")
-		payloadFilePtr.close()
-		line=blockSys.readline()
-blockSys.close()
-	
+
+get_blocked_payloads(args.blockedSyscallFile,"resultTemporalDebloating.txt")
+
