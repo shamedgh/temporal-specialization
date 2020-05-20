@@ -466,6 +466,9 @@ class Graph():
                         self.logger.warning("Graph: Skipping line starting with #: %s", inputLine)
                     inputLine = inputFile.readline()
                 inputFile.close()
+            else:
+                self.logger.error("File doesn't exist: %s", inputFilePath)
+                return -1                
         except Exception as e:
             self.logger.error("File doesn't exist: %s", inputFilePath)
             return -1
