@@ -4,7 +4,10 @@ __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--blockedSyscallFile", type=str, nargs='?', default="removedViaTemporalDebloating.txt")
+parser.add_argument("--blockedSyscallsTempSpl", type=str, nargs='?', 
+        default=os.path.join(__location__,"removedViaTemporalSpecialization.txt"))
+parser.add_argument("--blockedSyscallsLibDeb", type=str, nargs='?', 
+        default=os.path.join(__location__,"removedViaLibDebloating.txt"))
 args = parser.parse_args()
 
 payloadFileName = "syscallsPerPayload.txt"
@@ -54,7 +57,7 @@ print("\t\t\t\t("+str(openportCount)+")\t\t("+str(connectCount)+")\t\t("+str(exe
 print("\t\t\t\t-------------------------------------------------------")
 
 appsToTest=[]
-with open(os.path.join(__location__, args.blockedSyscallFile)) as blockSys:
+with open(args.blockedSyscallsTempSpl) as blockSys:
     line=blockSys.readline()
     while line: 
 	appsToTest.append(line.split(":")[0].strip())
@@ -63,7 +66,7 @@ with open(os.path.join(__location__, args.blockedSyscallFile)) as blockSys:
 
 def get_blocked_payloads(blockedSysCallFile, resultFile):
     result = open(resultFile,"w")
-    with open(os.path.join(__location__, blockedSysCallFile)) as blockSys:
+    with open(blockedSysCallFile) as blockSys:
         line=blockSys.readline()
         while line:
             app = line.split(":")[0].strip()
@@ -112,16 +115,16 @@ def get_blocked_payloads(blockedSysCallFile, resultFile):
 
 
 print("===================================")
-print("=== Via Library Specialization ====")
+print("===== Via Library Debloating ======")
 print("===================================")
 
 
-get_blocked_payloads("removedViaLibSpecialization.txt","resultViaLibSpecialization.txt")
+get_blocked_payloads(args.blockedSyscallsLibDeb,os.path.join(__location__,"resultViaLibDebloating.txt"))
 
-print("================================")
-print("=== Via Temporal Debloating ====")
-print("================================")
+print("====================================")
+print("=== Via Temporal Specialization ====")
+print("====================================")
 
 
-get_blocked_payloads(args.blockedSyscallFile,"resultTemporalDebloating.txt")
+get_blocked_payloads(args.blockedSyscallsTempSpl,os.path.join(__location__,"resultViaTemporalSpecialization.txt"))
 
