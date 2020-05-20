@@ -7,6 +7,29 @@ bootstrap operations performed by applications and the latter is related to
 operations which are continuously executed by the server to handle client
 requests.
 
+## Artifacts Evaluated
+
+This repository has been created for the Artifact Evaluation process of Usenix
+Security 2020. We have provided the possiblity of validating all of the main 
+results presented in the paper. We have listed what will and will not be
+covered through the scripts presented in this repository below.
+
+Will be covered:
+* The entire toolchain:
+    * Type-based pruning LLVM Pass
+    * Address-taken pruning LLVM Pass
+    * Python scripts for generating list of filtered system calls
+    * Python scripts for comparing results with library debloating
+* Security evaluation - shellcodes and ROP
+    * Scripts to generate security evaluation for shellcodes and ROP payloads
+
+Will NOT be covered:
+* Kernel security evaluation
+* Manually installing SECCOMP filters in programs (We have presented
+instructions on how to perform this manually)
+
+## Description
+
 Currently our prototype consists of two main parts. The analysis is mainly
 done through LLVM passes, which require LLVM-7. Then we use python scripts to
 further parse and analyze the results of the LLVM passes. 
