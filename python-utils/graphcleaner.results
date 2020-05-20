@@ -1,0 +1,15 @@
+INFO:coverage:Original Graph Size: 77537
+inverse,keepnodes,modifiedgraphsize
+inverse=False,allsyscalls+start_kernel+address_taken+interrupt_handler,66957
+inverse=True,allsyscalls+start_kernel+address_taken+interrupt_handler,58298
+inverse=False,allsyscalls+start_kernel+address_taken,66970
+inverse=True,allsyscalls+start_kernel+address_taken,58243
+inverse=False,allsyscalls+address_taken,67860
+inverse=True,allsyscalls+address_taken,57008
+inverse=False,allsyscalls,75595
+inverse=True,allsyscalls,44454
+inverse=False,start_kernel,76747
+inverse=True,start_kernel,38053
+
+inverse=True: all nodes which are accessible by starting nodes specified
+inverse=False: (original-modified)= all nodes which are exclusively accessible by starting nodes specified

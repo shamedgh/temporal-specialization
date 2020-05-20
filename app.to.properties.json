@@ -1,0 +1,143 @@
+{
+    "sec-eval-lib-output": "security-evaluation/removedViaLibSpecialization.txt",
+    "sec-eval-temporal-output": "security-evaluation/removedViaTemporalDebloating.txt",
+    "apps": [
+        {
+            "httpd": 
+                {
+                    "enable": "true",
+                    "cfg": {
+                            "direct" : "httpd.apr.svf.conditional.direct.calls.cfg",
+                            "svf" : "httpd.apr.svf.cfg",
+                            "svftype" : "httpd.apr.svf.type.cfg",
+                            "svftypefp" : "httpd.apr.svf.new.type.fp.wglobal.cfg",
+                            "svftypefpruntime" : "httpd.apr.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "child_main",
+                    "bininput": "httpd/",
+                    "output": "httpd.syscall.out"
+                },
+            "lighttpd": 
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "lighttpd.svf.conditional.direct.calls.cfg",
+                            "svf" : "lighttpd.svf.cfg",
+                            "svftype" : "lighttpd.svf.type.cfg",
+                            "svftypefp" : "lighttpd.svf.new.type.fp.wglobal.cfg",
+                            "svftypefpruntime" : "lighttpd.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "server_main_loop",
+                    "bininput": "lighttpd/",
+                    "output": "lighttpd.syscall.out"
+                },
+            "nginx": 
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "nginx.svf.conditional.direct.calls.cfg",
+                            "svf" : "nginx.svf.cfg",
+                            "svftype" : "nginx.svf.type.cfg",
+                            "svftypefp" : "nginx.svf.new.type.fp.wglobal.cfg",
+                            "svftypefpruntime" : "nginx.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "ngx_worker_process_cycle",
+                    "bininput": "nginx/",
+                    "output": "nginx.syscall.out"
+                },
+            "memcached": 
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "memcached.libevent.svf.conditional.direct.calls.cfg",
+                            "svf" : "memcached.libevent.svf.cfg",
+                            "svftype" : "memcached.svf.type.cfg",
+                            "svftypefp" : "memcached.libevent.svf.new.type.fp.wglobal.cfg",
+                            "svftypefpruntime" : "memcached.libevent.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "worker_libevent",
+                    "bininput": "memcached/",
+                    "output": "memcached.syscall.out"
+                },
+            "redis-server": 
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "redis.svf.conditional.direct.calls.cfg",
+                            "svf" : "redis.svf.cfg",
+                            "svftype" : "redis.svf.type.cfg",
+                            "svftypefp" : "redis.svf.new.type.fp.wglobal.cfg",
+                            "svftypefpruntime" : "redis.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "aeMain",
+                    "bininput": "redis/",
+                    "output": "redis.syscall.out"
+                },
+            "named": 
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "bind.libuv.svf.conditional.direct.calls.cfg",
+                            "svf" : "bind.libuv.svf.cfg",
+                            "svftype" : "bind.svf.type.cfg",
+                            "svftypefp" : "bind.libuv.svf.new.type.fp.wglobal.cfg",
+                            "svftypefpruntime" : "bind.libuv.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "isc_app_ctxrun",
+                    "bininput": "bind/",
+                    "output": "bind.syscall.out"
+                },
+            "smtpd": 
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "smtpd.libevent.svf.conditional.direct.calls.cfg",
+                            "svf" : "smtpd.libevent.svf.cfg",
+                            "svftype" : "smtpd.libevent.svf.type.cfg",
+                            "svftypefp" : "smtpd.libevent.svf.new.type.fp.wglobal.cfg",
+                            "svftypefpruntime" : "smtpd.libevent.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "control",
+                    "bininput": "smtpd/",
+                    "output": "smtpd.syscall.out"
+                },
+            "vsftpd": 
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "vsftpd.svf.conditional.direct.calls.cfg",
+                            "svf" : "vsftpd.svf.cfg",
+                            "svftype" : "vsftpd.svf.type.cfg",
+                            "svftypefp" : "vsftpd.svf.type.fp.cfg",
+                            "svftypefpruntime" : "vsftpd.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "one_process_start",
+                    "bininput": "vsftpd/",
+                    "output": "vsftpd.syscall.out"
+                },
+            "mysqld":  
+                {
+                    "enable": "false",
+                    "cfg": {
+                            "direct" : "httpd.apr.svf.conditional.direct.calls.cfg",
+                            "svf" : "httpd.apr.svf.cfg",
+                            "svftype" : "httpd.apr.svf.type.cfg",
+                            "svftypefp" : "httpd.apr.svf.type.fp.cfg",
+                            "svftypefpruntime" : "nginx.svf.new.type.fp.wglobal.runtime.cfg"
+                           },
+                    "master": "main",
+                    "worker": "child_main",
+                    "bininput": "httpd/",
+                    "output": "httpd.syscall.out"
+                }
+        }
+    ]
+}
