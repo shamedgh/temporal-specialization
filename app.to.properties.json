@@ -63,10 +63,10 @@
                 {
                     "enable": "false",
                     "cfg": {
-                            "direct" : "redis.svf.conditional.direct.calls.cfg",
-                            "svf" : "redis.svf.cfg",
-                            "svftype" : "redis.svf.type.cfg",
-                            "svftypefp" : "redis.svf.new.type.fp.wglobal.cfg"
+                            "direct" : "redis-server.svf.conditional.direct.calls.cfg",
+                            "svf" : "redis-server.svf.cfg",
+                            "svftype" : "redis-server.svf.type.cfg",
+                            "svftypefp" : "redis-server.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "aeMain",
