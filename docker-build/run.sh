@@ -24,7 +24,7 @@ spa -condition-cfg ./bitcodes/$BC.bc 2>&1 | tee callgraphs/$BC.svf.conditional.d
 
 spa -simple ./bitcodes/$BC.bc 2>&1 | tee callgraphs/$BC.svf.function.pointer.allocations.wglobal.cfg
 
-python3 python-utils/graphCleaner.py --fpanalysis --funcname $ENTRY --output $BC.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/$BC.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/$BC.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/$BC.svf.type.cfg
+python3 python-utils/graphCleaner.py --fpanalysis --funcname $ENTRY --output callgraphs/$BC.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/$BC.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/$BC.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/$BC.svf.type.cfg
 
 mkdir outputs
 mkdir stats

@@ -1,6 +1,6 @@
 This container contains a prebuilt Clang+LLVM and the modified SVF for artifact evaluation of Temporal Specialization.
 
-To run the docker container simply run:
+To run the analysis for a single application, in the docker container simply run:
 
 docker run -it --name artifact-eval --volume <local_results_dir_full_path>:/results temporal-specialization-artifacts:1.0  ./run.sh <bitcode_name> <serving_entrypoint>
 
@@ -10,6 +10,12 @@ function worker_libevent as the entrypoint for the serving phase, and
 
 docker run -it --name artifact-eval --volume mnt/Projects/temporal-specialization-artifacts/docker-build/results:/results temporal-specialization-artifacts:1.0 ./run.sh memcached.libevent worker_libevent
 
+If you want to run the analysis for all the applications, first launch the
+container, and then use docker exec to run each analysis.
+
+docker run -it --name artifact-eval --volume <local_results_dir_full_path>:/results temporal-specialization-artifacts:1.0
+
+docker exec -it artifact-eval ./run.sh memcached.libevent worker_libevent
 docker exec -it artifact-eval ./run.sh httpd.wapr child_main
 docker exec -it artifact-eval ./run.sh nginx ngx_worker_process_cycle
 docker exec -it artifact-eval ./run.sh lighttpd server_main_loop
