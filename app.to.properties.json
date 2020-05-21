@@ -73,7 +73,7 @@
                     "bininput": "redis/",
                     "output": "redis.syscall.out"
                 },
-            "named": 
+            "bind": 
                 {
                     "enable": "false",
                     "cfg": {
