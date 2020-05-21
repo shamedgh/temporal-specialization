@@ -52,7 +52,7 @@ executeCountDiv = (float(executeCount))/100
 print("\t\t\t\t-------------------------------------------------------")
 print("\t\t\t\t\t\tTotal Shellcode count: " + str(totalCount))
 print("\t\t\t\t-------------------------------------------------------")
-print("\t\t\t\tOpenPort\tConnect\t\tExecute\t\tFileOps")
+print("\t\t\t\tOpenPort\tConnect\t\tExecute\t\tSystemOps")
 print("\t\t\t\t("+str(openportCount)+")\t\t("+str(connectCount)+")\t\t("+str(executeCount)+")\t\t(" + str(fileOpsCount)+")")
 print("\t\t\t\t-------------------------------------------------------")
 
