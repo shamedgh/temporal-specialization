@@ -24,12 +24,12 @@ RUN git clone $GIT_REPO_URL
 WORKDIR $ROOT/$GIT_REPO
 
 # Build LLVM
-RUN tar -Jxvf llvm-7.0.0.src.tar.xz
+RUN tar -Jxvf llvm-7.0.0.src.wclang.tar.xz
 RUN mkdir $ROOT/install
 RUN mkdir $ROOT/$GIT_REPO/llvm-7.0.0.src/build
 WORKDIR $ROOT/$GIT_REPO/llvm-7.0.0.src/build
 RUN cmake -G "Unix Makefiles" -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$ROOT/install ../
-RUN make -j $NUM_CORES && make install
+RUN make -j $NUM_CORES && make install/strip
 
 # Build SVF
 ENV LLVM_DIR=$ROOT/install/bin
