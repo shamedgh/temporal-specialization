@@ -5,13 +5,12 @@
 # Example: 
 # ./run.sh memcached worker_libevent
 
-if [ "$#" -ne 2 ]; then
-    echo "Usage: ./run.sh <bc_file_name> <entrypoint>"
+if [ "$#" -ne 1 ]; then
+    echo "Usage: ./run.sh <bc_file_name>"
     exit 1
 fi
 
 BC=$1
-ENTRY=$2
 
 APP="$(cut -d'.' -f1 <<< $BC)"
 
@@ -24,7 +23,7 @@ spa -condition-cfg ./bitcodes/$BC.bc 2>&1 | tee callgraphs/$BC.svf.conditional.d
 
 spa -simple ./bitcodes/$BC.bc 2>&1 | tee callgraphs/$BC.svf.function.pointer.allocations.wglobal.cfg
 
-python3 python-utils/graphCleaner.py --fpanalysis --funcname $ENTRY --output callgraphs/$BC.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/$BC.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/$BC.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/$BC.svf.type.cfg
+python3 python-utils/graphCleaner.py --fpanalysis --funcname main --output callgraphs/$BC.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/$BC.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/$BC.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/$BC.svf.type.cfg
 
 mkdir outputs
 mkdir stats

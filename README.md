@@ -1,66 +1,110 @@
-# Temporal Specialization Artifacts
+# Temporal Specialization 
 
-This repository can be used to develop specialized system call filters for
-server applications based on their phase of execution. We differ between the
+Temporal Specialization can be used to develop specialized system call 
+filters for
+server applications based on their phase of execution. We differentiate
+ between the
 initialization phase and serving phase, where the former is related to
 bootstrap operations performed by applications and the latter is related to
 operations which are continuously executed by the server to handle client
 requests.
 
-## Artifacts Evaluated
+## Overview of steps to achieve Temporal Specialization
+1. Generate LLVM IR after Link-time Optimization(LTO) for the application. 
+2. Generate call graph for the application and the shared libraries it uses. 
+3. Use developer provided function name as entry point into the serving phase. 
+4. Extract set of system calls that would be used in serving phase. 
+5. Create seccomp filters to block execution of any other system call. 
+
+
+## Artifacts Evaluation
 
 This repository has been created for the Artifact Evaluation process of Usenix
-Security 2020. We have provided the possiblity of validating all of the main 
+Security 2020. We have provided the resources to reproduce all of the main 
 results presented in the paper. We have listed what will and will not be
 covered through the scripts presented in this repository below.
 
 Will be covered:
 * The entire toolchain:
-    * Type-based pruning LLVM Pass
-    * Address-taken pruning LLVM Pass
+    * LLMV Pass for Type-based pruning
+    * LLVM Pass for Address-taken pruning
     * Python scripts for generating list of filtered system calls
     * Python scripts for comparing results with library debloating
 * Security evaluation - shellcodes and ROP
-    * Scripts to generate security evaluation for shellcodes and ROP payloads
+    * Python scripts to perform security evaluation for shellcodes and ROP payloads
 
 Will NOT be covered:
 * Kernel security evaluation
-* Manually installing SECCOMP filters in programs (We have presented
+* Installing SECCOMP filters in applications (We have presented
 instructions on how to perform this manually)
 
 ## Description
 
+The source code along with all the helper scripts are part of this repo. 
+Before running evaluations, it is necessary to get all the prerequisites
+installed. These include Clang+LLVM and modified SVF. 
+
+There are 2 ways to set up these prerequisites: 
+1. Use a prebuilt container, or
+2. Install everything on your system. 
+ 
 Currently our prototype consists of two main parts. The analysis is mainly
 done through LLVM passes, which require LLVM-7. Then we use python scripts to
 further parse and analyze the results of the LLVM passes. 
 
-We have separately described each of these two parts in the following
-sections.
+To ease the process, we have provided the bitcode for tested applications
+in the *bitcodes* folder of this repository.
 
-## Initialization
-This repository has multiple submodule which must be loaded using the
+**To Run using docker container**
+```
+sudo apt install docker.io
+```
+For steps on how to run the analysis, refer to docker-build/README.md
+Once done, continue evaluation by following from step 3. 
+
+**To Run all steps on your system**
+
+Follow these steps to install all required applications before starting the
+analysis. 
+ 
+## 1. Initialization
+This repository has multiple submodules which must be loaded using the
 following command:
 ```
 git submodule update --init --recursive
 ```
 
-## LLVM Passes
-We use three LLVM passes to generate the information we need based on the
-server application we need to analyze. We suppose the application along with
-its libraries has already been compiled using LTO into LLVM IR and we can pass
-the bitcode to our pass. We have provided the bitcode for a sample application
-in the *bitcodes* folder of this repository (Apache HTTPd).
+## 2. LLVM Passes
+Install Clang-7 and LLVM-7
+```
+sudo apt install clang-7
+sudo apt install llvm-7
+```
 
-### Compiling SVF
-***If you are using the Docker image you can go to the next step.***
+### 2.1 Compiling SVF
 
 The submodule SVF in the repository holds our modified SVF source code. You
 can follow the commands for compiling it using the original commands from the
 [repository](https://github.com/SVF-tools/SVF).
 **Please make sure to use the same LLVM version for both compiling SVF and any
-application you would like to use. We have only tested LLVM7 with our
+application you would like to use. We have only tested LLVM-7 with our
 toolchain.**
 
+### 2.2 Generating bitcodes
+
+Sources for all tested applications can be found in: [To Be Added] 
+To build each application using LTO and generate bitcode, run
+```
+$./configure CC=clang-7 CFLAGS="-flto -O2"  LDFLAGS="-flto -Wl,-plugin-opt=save-temps" 
+$ make clean; make
+```
+This generates and saves bitcodes at the end of each compiler step. We use the final 
+IR generated named "<application>.0.5.precodegen.bc"
+
+For convenience, we have pre-generated these IRs and they can be found in
+bitcodes/ .
+
+## 3. Call-graph extraction
 ### SVF with Type-based Pruning (callgraph-wtype-based)
 We use Andersen's points-to analysis algorithm to generate the callgraph of
 the application. We have modified [SVF](https://github.com/SVF-tools/SVF) to
@@ -81,7 +125,7 @@ format.
 ```
 wpa -print-fp -ander -dump-callgraph ./bitcodes/httpd.apr.bc
 ```
-It should take around 15 minutes to run for the sample application mentioned
+It should take around 15 minutes to run for Apache httpd mentioned
 above. But it can vary depending on the application.
 Running the pass above generates two files name callgraph\_final.dot and
 callgraph\_initial.dot. We will use the first to generate our main callgraph. 
@@ -109,7 +153,7 @@ Please store this file for further reference.
 ### Function Address Allocation Analysis (callgraph-fp-allocations)
 The last LLVM pass is the function pointer allocation analysis tool. This tool
 is used to extract places in the code where functions are assigned to function
-pointers. The following command can be used to parse the program bitcode and
+pointers. The following command can be used to parse the application bitcode and
 generate the function pointer allocation file.
 ```
 spa -simple ./bitcodes/httpd.apr.bc 2>&1 | tee httpd.apr.svf.function.pointer.allocations.wglobal.cfg
@@ -117,22 +161,24 @@ spa -simple ./bitcodes/httpd.apr.bc 2>&1 | tee httpd.apr.svf.function.pointer.al
 We will use the combination of this file and the file generated in the
 previous step to create the pruned call graph.
 
-## Python Scripts
+## 4. Python Scripts
 After generating the required call graphs through LLVM passes we use python
 scripts to combine the graphs and identify which system calls can be futher 
 filtered in the serving phase.
 
 ### Call Function Pointer Target Pruning (callgraph-final)
 We first have to merge all the previously generated call graphs into our final
-call graph which has its inaccessible callsite targets pruned. We use the
-following script to do so. We need to pass the function name which the program
-runs upon being executed through the --funcname argument.
+call graph which has its inaccessible callsite targets pruned. 
+
+For this, we use the following script. We need to pass the name of the function name 
+which starts executing upon when the application is run. This is provided using 
+--funcname argument.
 ```
 python3.7 graphCleaner.py --fpanalysis --funcname main --output callgraphs/httpd.apr.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/httpd.apr.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/httpd.apr.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/httpd.apr.svf.type.cfg
 ```
 Arguments:
 
---funcname: Function which is executed upon running the program. Usually main,
+--funcname: Function which is executed upon running the application. Usually main,
 unless any test is being run.
 
 --output: Path to store the final call graph.
@@ -149,7 +195,7 @@ type-based pruning (**callgraph-wtype-based**)
 ### Filtered System Call Extraction
 In this step we use the final call graph along with other artifacts generated
 beforehand to create the final list of system calls which can be filtered
-after the program enters the serving phase.
+after the application enters the serving phase.
 
 This script has a configuration file which needs to be modified to correspond
 to the filenames used in the previous sections. In case you have used the
@@ -179,7 +225,7 @@ to generate statistics regarding the improvement compared with library
 debloating. For the sake of simplicity we will suppose the libraries have each
 been analyzed by a library debloating tool and their call graph has been
 generated. We have provided the call graph for all libraries required by the
-programs in our dataset in the *otherCfgs* folder. 
+applications in our dataset in the *otherCfgs* folder. 
 *The folder *libdebloating*
 contains instructions on how to generate these call graphs for interested
 users.*
@@ -197,7 +243,7 @@ passed to this script.
 **--binpath**
 As we mentioned in our paper, some applications and libraries make direct
 system calls. We consider these direct system calls as necessary throughout
-the program life cycle regardless of whether or not they are used in the
+the application life cycle regardless of whether or not they are used in the
 initialization or serving phase.
 
 **--apptopropertymap**
@@ -233,9 +279,15 @@ bypassing the enable setting in the JSON file. The rest of the settings for
 the application will still be read from the JSON file.
 
 
-## Security Evaluation
+## 5. Security Evaluation
 
 For security evaluation, we collected a set of 547 shellcodes payloads and 17 
 ROP payloads. Using equivalence classes mentioned in the paper, a total of 
 1726 shellcodes were generated. To run tests for applications, refer to 
-the README in the security-evaluation folder.
+security-evaluation/README.md.
+
+Note that we have extended our payload database since the paper submission.
+While the number of tested payloads in the paper is 566, in the camera-ready
+version we plan to include results from our latest set which has 1726
+shellcodes. Similarly, for ROP payloads we have extended our payload set from 13
+to 16 ROP payloads. 
