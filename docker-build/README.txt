@@ -16,7 +16,7 @@ container, and then use docker exec to run each analysis.
 docker run -it --name artifact-eval --volume <local_results_dir_full_path>:/results temporal-specialization-artifacts:1.0
 
 docker exec -it artifact-eval ./run.sh memcached.libevent worker_libevent
-docker exec -it artifact-eval ./run.sh httpd.wapr child_main
+docker exec -it artifact-eval ./run.sh httpd.apr child_main
 docker exec -it artifact-eval ./run.sh nginx ngx_worker_process_cycle
 docker exec -it artifact-eval ./run.sh lighttpd server_main_loop
 docker exec -it artifact-eval ./run.sh redis-server aeMain 

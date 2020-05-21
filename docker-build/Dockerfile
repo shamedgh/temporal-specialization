@@ -28,7 +28,7 @@ RUN tar -Jxvf llvm-7.0.0.src.tar.xz
 RUN mkdir $ROOT/install
 RUN mkdir $ROOT/$GIT_REPO/llvm-7.0.0.src/build
 WORKDIR $ROOT/$GIT_REPO/llvm-7.0.0.src/build
-RUN cmake -G "Unix Makefiles" -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_INSTALL_PREFIX=$ROOT/install ../
+RUN cmake -G "Unix Makefiles" -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$ROOT/install ../
 RUN make -j $NUM_CORES && make install
 
 # Build SVF
@@ -43,12 +43,10 @@ RUN cp $ROOT/$GIT_REPO/SVF/Release-build/bin/* /usr/bin/
 # Copy the parameterized run.sh into the container
 WORKDIR $ROOT/$GIT_REPO
 COPY run.sh $ROOT/$GIT_REPO
+# And the spin.sh -- this will ensure the container doesn't exit
 COPY spin.sh $ROOT/$GIT_REPO
-# TODO remove this
-RUN git pull
 RUN chmod u+x run.sh
 RUN chmod u+x spin.sh
-RUN git pull
 
 #CMD ./run.sh $BC $ENTRY
 CMD ./spin.sh
