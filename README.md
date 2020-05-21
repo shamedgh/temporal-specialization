@@ -88,7 +88,7 @@ callgraph\_initial.dot. We will use the first to generate our main callgraph.
 We need to convert it to a more human-readable format. To do so we will use
 the convertSvfCfgToHumanReadable.py script.
 ```
-python3.7 convertSvfCfgToHumanReadable.py callgraph_final.dot > httpd.apr.svf.type.cfg
+python3.7 convertSvfCfgToHumanReadable.py callgraph_final.dot > callgraphs/httpd.apr.svf.type.cfg
 ```
 We will need the generated call graph for our final analysis where we identify
 which system calls can be filtered after entering the serving phase.
@@ -128,7 +128,7 @@ call graph which has its inaccessible callsite targets pruned. We use the
 following script to do so. We need to pass the function name which the program
 runs upon being executed through the --funcname argument.
 ```
-python3.7 graphCleaner.py --fpanalysis --funcname main --output httpd.apr.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/httpd.apr.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/httpd.apr.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/httpd.apr.svf.type.cfg
+python3.7 graphCleaner.py --fpanalysis --funcname main --output callgraphs/httpd.apr.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/httpd.apr.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/httpd.apr.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/httpd.apr.svf.type.cfg
 ```
 Arguments:
 
