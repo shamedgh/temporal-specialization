@@ -79,7 +79,7 @@ It should return the path to the wpa binary.
 You should run the following command to generate the call graph in the DOT
 format.
 ```
-wpa -print-fp -ander -dump-callgraph ./bitcodes/httpd.wapr.bc
+wpa -print-fp -ander -dump-callgraph ./bitcodes/httpd.apr.bc
 ```
 It should take around 15 minutes to run for the sample application mentioned
 above. But it can vary depending on the application.
@@ -101,7 +101,7 @@ We have generated a simple program analysis tool (spa) which is an LLVM pass
 in our modified SVF repository.
 
 ```
-spa -condition-cfg ./bitcodes/httpd.wapr.bc 2>&1 | tee httpd.apr.svf.conditional.direct.calls.cfg
+spa -condition-cfg ./bitcodes/httpd.apr.bc 2>&1 | tee httpd.apr.svf.conditional.direct.calls.cfg
 ```
 We need this call graph for pruning the inaccessible targets of callsites.
 Please store this file for further reference.
@@ -112,7 +112,7 @@ is used to extract places in the code where functions are assigned to function
 pointers. The following command can be used to parse the program bitcode and
 generate the function pointer allocation file.
 ```
-spa -simple ./bitcodes/httpd.wapr.bc 2>&1 | tee httpd.apr.svf.function.pointer.allocations.wglobal.cfg
+spa -simple ./bitcodes/httpd.apr.bc 2>&1 | tee httpd.apr.svf.function.pointer.allocations.wglobal.cfg
 ```
 We will use the combination of this file and the file generated in the
 previous step to create the pruned call graph.
