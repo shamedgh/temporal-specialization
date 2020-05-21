@@ -10,8 +10,7 @@
                             "direct" : "httpd.apr.svf.conditional.direct.calls.cfg",
                             "svf" : "httpd.apr.svf.cfg",
                             "svftype" : "httpd.apr.svf.type.cfg",
-                            "svftypefp" : "httpd.apr.svf.new.type.fp.wglobal.cfg",
-                            "svftypefpruntime" : "httpd.apr.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "httpd.apr.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "child_main",
@@ -25,8 +24,7 @@
                             "direct" : "lighttpd.svf.conditional.direct.calls.cfg",
                             "svf" : "lighttpd.svf.cfg",
                             "svftype" : "lighttpd.svf.type.cfg",
-                            "svftypefp" : "lighttpd.svf.new.type.fp.wglobal.cfg",
-                            "svftypefpruntime" : "lighttpd.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "lighttpd.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "server_main_loop",
@@ -40,8 +38,7 @@
                             "direct" : "nginx.svf.conditional.direct.calls.cfg",
                             "svf" : "nginx.svf.cfg",
                             "svftype" : "nginx.svf.type.cfg",
-                            "svftypefp" : "nginx.svf.new.type.fp.wglobal.cfg",
-                            "svftypefpruntime" : "nginx.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "nginx.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "ngx_worker_process_cycle",
@@ -55,8 +52,7 @@
                             "direct" : "memcached.libevent.svf.conditional.direct.calls.cfg",
                             "svf" : "memcached.libevent.svf.cfg",
                             "svftype" : "memcached.svf.type.cfg",
-                            "svftypefp" : "memcached.libevent.svf.new.type.fp.wglobal.cfg",
-                            "svftypefpruntime" : "memcached.libevent.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "memcached.libevent.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "worker_libevent",
@@ -70,8 +66,7 @@
                             "direct" : "redis.svf.conditional.direct.calls.cfg",
                             "svf" : "redis.svf.cfg",
                             "svftype" : "redis.svf.type.cfg",
-                            "svftypefp" : "redis.svf.new.type.fp.wglobal.cfg",
-                            "svftypefpruntime" : "redis.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "redis.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "aeMain",
@@ -85,8 +80,7 @@
                             "direct" : "bind.libuv.svf.conditional.direct.calls.cfg",
                             "svf" : "bind.libuv.svf.cfg",
                             "svftype" : "bind.svf.type.cfg",
-                            "svftypefp" : "bind.libuv.svf.new.type.fp.wglobal.cfg",
-                            "svftypefpruntime" : "bind.libuv.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "bind.libuv.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "isc_app_ctxrun",
@@ -100,8 +94,7 @@
                             "direct" : "smtpd.libevent.svf.conditional.direct.calls.cfg",
                             "svf" : "smtpd.libevent.svf.cfg",
                             "svftype" : "smtpd.libevent.svf.type.cfg",
-                            "svftypefp" : "smtpd.libevent.svf.new.type.fp.wglobal.cfg",
-                            "svftypefpruntime" : "smtpd.libevent.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "smtpd.libevent.svf.new.type.fp.wglobal.cfg"
                            },
                     "master": "main",
                     "worker": "control",
@@ -115,8 +108,7 @@
                             "direct" : "vsftpd.svf.conditional.direct.calls.cfg",
                             "svf" : "vsftpd.svf.cfg",
                             "svftype" : "vsftpd.svf.type.cfg",
-                            "svftypefp" : "vsftpd.svf.type.fp.cfg",
-                            "svftypefpruntime" : "vsftpd.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "vsftpd.svf.type.fp.cfg"
                            },
                     "master": "main",
                     "worker": "one_process_start",
@@ -130,8 +122,7 @@
                             "direct" : "httpd.apr.svf.conditional.direct.calls.cfg",
                             "svf" : "httpd.apr.svf.cfg",
                             "svftype" : "httpd.apr.svf.type.cfg",
-                            "svftypefp" : "httpd.apr.svf.type.fp.cfg",
-                            "svftypefpruntime" : "nginx.svf.new.type.fp.wglobal.runtime.cfg"
+                            "svftypefp" : "httpd.apr.svf.type.fp.cfg"
                            },
                     "master": "main",
                     "worker": "child_main",

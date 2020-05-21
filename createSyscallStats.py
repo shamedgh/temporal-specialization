@@ -250,8 +250,9 @@ if __name__ == "__main__":
                                 runtimeMasterSyscalls = runtimeObj.extractAccessibleSystemCalls(masterMainList, exceptList)
                                 for function, syscalls in functionToSyscallMap.items():
                                     rootLogger.info("function: %s syscalls: %s", function, str(syscalls))
+                                rootLogger.info("////////////////////////////////////////////appName: %s runtime: %d ////////////////////////////////////", appName, len(runtimeWorkerSyscalls))
 
-                            rootLogger.info("////////////////////////////////////////////appName: %s temporal: %d runtime: %d ////////////////////////////////////", appName, len(temporalWorkerSyscalls), len(runtimeWorkerSyscalls))
+                            rootLogger.info("////////////////////////////////////////////appName: %s libdebloating: %d temporal: %d ////////////////////////////////////", appName, len(piecewiseMasterSyscalls), len(temporalWorkerSyscalls))
 
                             importTableSyscallNames = set()
                             piecewiseWorkerSyscallNames = set()
