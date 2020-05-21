@@ -43,6 +43,12 @@ RUN cp $ROOT/$GIT_REPO/SVF/Release-build/bin/* /usr/bin/
 # Copy the parameterized run.sh into the container
 WORKDIR $ROOT/$GIT_REPO
 COPY run.sh $ROOT/$GIT_REPO
+COPY spin.sh $ROOT/$GIT_REPO
+# TODO remove this
+RUN git pull
 RUN chmod u+x run.sh
+RUN chmod u+x spin.sh
+RUN git pull
 
-CMD ./run.sh $BC $ENTRY
+#CMD ./run.sh $BC $ENTRY
+CMD ./spin.sh
