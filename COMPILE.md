@@ -1,3 +1,3 @@
-# Compilation of source-code to Intermediate-Representation Bitcode
+# Compilation of source-code to IR Bitcode
 
 [TODO]

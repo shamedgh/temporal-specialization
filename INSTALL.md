@@ -1,4 +1,4 @@
-# Running on a Bare-bones Local Machine
+# Running on a Local Machine
 
 The source code along with all the helper scripts are part of this repo. 
 Before running evaluations, it is necessary to get all the prerequisites
