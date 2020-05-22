@@ -100,7 +100,8 @@ The results for the analysis will be stored in the path provided in
 \<app\_name\>.shellcode.payload.txt and \<app\_name\>.shellcode.rop.txt. These
 correspond to the results shown in Table 5 in our paper. (Note: Since the
 submission of our paper, we have added more payloads, so the numbers have
-changed slightly. But are generally similar, and the trends continue)
+changed slightly. But the results are generally similar, and the trends observed and 
+reported continue -- temporal specialization outperforms library debloating.)
 
 To re-run an analysis, the easiest way is to kill the container and start
 afresh. The command to do that is:
@@ -114,7 +115,7 @@ and other useful commands [here](docker-build/README.md).
 
 ## Running the artifacts on your machine
 
-Follow the instructions here (INSTALL.md) to install the artifacts on your local machine.
+Follow the instructions [here](INSTALL.md) to install the artifacts on your local machine.
 
 ## Compiling source code to generate bitcode
 See [here](COMPILE.md) for details on how to compile the source code to
