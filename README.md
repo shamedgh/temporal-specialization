@@ -82,27 +82,27 @@ how long each takes. If it takes long do not worry, it is still running**
 
 ```
 docker exec -it artifact-eval ./run.sh memcached.libevent
-**Estimated Time Required: 10 minutes**
+# **Estimated Time Required: 10 minutes**
 ```
 
 ```
 docker exec -it artifact-eval ./run.sh httpd.apr
-**Estimated Time Required: 10 minutes**
+# **Estimated Time Required: 10 minutes**
 ```
 
 ```
 docker exec -it artifact-eval ./run.sh nginx
-**Estimated Time Required: 90 minutes**
+# **Estimated Time Required: 90 minutes**
 ```
 
 ```
 docker exec -it artifact-eval ./run.sh lighttpd 
-**Estimated Time Required: 10 minutes**
+# **Estimated Time Required: 10 minutes**
 ```
 
 ```
 docker exec -it artifact-eval ./run.sh redis-server
-**Estimated Time Required: 15 minutes**
+# **Estimated Time Required: 15 minutes**
 ```
 
 The results for the analysis will be stored in the path provided in
