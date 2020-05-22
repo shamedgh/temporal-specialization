@@ -97,7 +97,7 @@ docker exec -it artifact-eval ./run.sh redis-server
 
 The results for the analysis will be stored in the path provided in
 \<full\_path\_of\_results\_dir\>, in the form
-\<app\_name\>.shellcode.payload.txt and \<app\_name\>.shellcode.rop.txt. These
+\<app\_name\>.shellcode.payload.txt and \<app\_name\>.rop.payload.txt. These
 correspond to the results shown in Table 5 in our paper. (Note: Since the
 submission of our paper, we have added more payloads, so the numbers have
 changed slightly. But the results are generally similar, and the trends observed and 
