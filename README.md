@@ -105,6 +105,11 @@ docker exec -it artifact-eval ./run.sh redis-server
 # **Estimated Time Required: 15 minutes**
 ```
 
+```
+docker exec -it artifact-eval ./run.sh bind.libuv
+# **Estimated Time Required: ~10 hours**
+```
+
 The results for the analysis will be stored in the path provided in
 \<full\_path\_of\_results\_dir\>, in the form
 \<app\_name\>.shellcode.payload.txt and \<app\_name\>.rop.payload.txt. These
