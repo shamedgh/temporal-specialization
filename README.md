@@ -103,6 +103,10 @@ submission of our paper, we have added more payloads, so the numbers have
 changed slightly. But the results are generally similar, and the trends observed and 
 reported continue -- temporal specialization outperforms library debloating.)
 
+The file \<app\_name\>.sensitive.stats shows the statistics of the sensitive
+system calls that are filtered. This corresponds to Table 3 in our paper. The
+file <app\_name>.syscall.count corresponds to Table 2 in our paper. 
+
 To re-run an analysis, the easiest way is to kill the container and start
 afresh. The command to do that is:
 

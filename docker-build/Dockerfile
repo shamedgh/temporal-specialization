@@ -47,6 +47,7 @@ COPY run.sh $ROOT/$GIT_REPO
 COPY spin.sh $ROOT/$GIT_REPO
 RUN chmod u+x run.sh
 RUN chmod u+x spin.sh
+RUN git pull
 
 #CMD ./run.sh $BC $ENTRY
 CMD ./spin.sh

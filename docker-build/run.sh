@@ -34,3 +34,6 @@ python security-evaluation/getBlockedPayloadsROP.py --blockedSyscallsTempSpl sec
 
 cp $APP.shellcode.payload.txt /results/
 cp $APP.rop.payload.txt /results/
+
+cp stats/sensitive.stats /results/$APP.sensitive.stats
+cp outputs/syscall.count-TABLE2.out /results/$APP.syscall.count
