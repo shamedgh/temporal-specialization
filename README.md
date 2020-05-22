@@ -82,28 +82,28 @@ how long each takes. If it takes long do not worry, it is still running**
 
 ```
 docker exec -it artifact-eval ./run.sh memcached.libevent
-```
 **Estimated Time Required: 10 minutes**
+```
 
 ```
 docker exec -it artifact-eval ./run.sh httpd.apr
-```
 **Estimated Time Required: 10 minutes**
+```
 
 ```
 docker exec -it artifact-eval ./run.sh nginx
-```
 **Estimated Time Required: 90 minutes**
+```
 
 ```
 docker exec -it artifact-eval ./run.sh lighttpd 
-```
 **Estimated Time Required: 10 minutes**
+```
 
 ```
 docker exec -it artifact-eval ./run.sh redis-server
-```
 **Estimated Time Required: 15 minutes**
+```
 
 The results for the analysis will be stored in the path provided in
 \<full\_path\_of\_results\_dir\>, in the form
@@ -124,7 +124,9 @@ To match each line with the table you should only consider the two
 debloat-types piecewise-master for library debloating and temporal-worker for
 temporal. 1 means the system call is required and 0 means that it is not
 required. 
-**So 0 is good. 0 means that we can filter that sensitive system call.**
+**So 0 is what we would like to see. 0 means that we can filter that sensitive 
+system call.**
+
 The file <app\_name>.syscall.count corresponds to Table 2 in our paper. 
 
 To re-run an analysis, the easiest way is to kill the container and start
