@@ -18,7 +18,7 @@ In particular, our artifacts cover:
 Our artifacts do NOT cover:
 * Kernel security evaluation
 * Installing SECCOMP filters in applications (We have presented
-instructions on how to perform this manually)
+instructions on how to perform this manually [here](SECCOMP.md)
 
 For the convenience of the artifact evaluators, we provide two ways of
 exercising these artifacts. These are (in the order of increasing complexity):
@@ -31,7 +31,7 @@ Because our analysis is a Whole Program Analysis, we need a bitcode that
 includes dependent libraries linked together. We have provided this linked
 bitcode for the applications that we have reported in our paper (in the
 bitcodes/ directory). We have also provided instructions on how to compile
-these bitcodes from scratch in *TODO*
+these bitcodes from scratch [here](COMPILE.md)
 
 ## Repository Description
 
