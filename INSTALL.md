@@ -73,7 +73,8 @@ bitcodes/.
 We use Andersen's points-to analysis algorithm to generate the callgraph of
 the application. We have modified [SVF](https://github.com/SVF-tools/SVF) to
 prune spurious edges which do not match argument types (only struct types).
-This is the main element used in our temporal specialization approach.
+This is the main element used in our temporal specialization approach. We
+describe this in detail in Section 5.1.1 in the paper.
 
 ```
 export SVF_HOME=[path-to-svf-home]
@@ -121,7 +122,9 @@ Please store this file for further reference.
 ### Function Address Allocation Analysis (callgraph-fp-allocations)
 The last LLVM pass is the function pointer allocation analysis tool. This tool
 is used to extract places in the code where functions are assigned to function
-pointers. The following command can be used to parse the application bitcode and
+pointers. We have discussed our method in detail in Section 5.1.2 in the
+paper.
+The following command can be used to parse the application bitcode and
 generate the function pointer allocation file.
 
 ```
