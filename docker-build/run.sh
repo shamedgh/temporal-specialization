@@ -29,8 +29,8 @@ mkdir outputs
 mkdir stats
 python3 createSyscallStats.py -c ./callgraphs/glibc.callgraph --apptopropertymap app.to.properties.json --binpath ./binaries --outputpath outputs/ --apptolibmap app.to.lib.map.json --sensitivesyscalls sensitive.syscalls --sensitivestatspath stats/sensitive.stats --syscallreductionpath stats/syscallreduction.stats --libdebloating --othercfgpath ./otherCfgs/ --cfgpath callgraphs --singleappname $APP
 
-python security-evaluation/getBlockedPayloads.py --blockedSyscallsTempSpl security-evaluation/removedViaTemporalDebloating.txt --blockedSyscallsLibDeb security-evaluation/removedViaLibSpecialization.txt 2>&1 | tee $APP.shellcode.payload.txt
-python security-evaluation/getBlockedPayloadsROP.py --blockedSyscallsTempSpl security-evaluation/removedViaTemporalDebloating.txt --blockedSyscallsLibDeb security-evaluation/removedViaLibSpecialization.txt 2>&1 | tee $APP.rop.payload.txt
+python security-evaluation/getBlockedPayloads.py --blockedSyscallsTempSpl security-evaluation/removedViaTemporalSpecialization.txt --blockedSyscallsLibDeb security-evaluation/removedViaLibDebloating.txt 2>&1 | tee $APP.shellcode.payload.txt
+python security-evaluation/getBlockedPayloadsROP.py --blockedSyscallsTempSpl security-evaluation/removedViaTemporalSpecialization.txt --blockedSyscallsLibDeb security-evaluation/removedViaLibDebloating.txt 2>&1 | tee $APP.rop.payload.txt
 
 cp $APP.shellcode.payload.txt /results/
 cp $APP.rop.payload.txt /results/

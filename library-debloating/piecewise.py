@@ -54,19 +54,19 @@ class Piecewise:
             sys.exit(-1)
         
         for libraryName, libPath in libraryToPathDict.items():
-            self.logger.info("Checking library: %s", libraryName)
+            #self.logger.info("Checking library: %s", libraryName)
             libraryCfgFileName = self.cleanLib(libraryName) + ".callgraph.out"
             libraryCfgFilePath = self.cfgPath + "/" + libraryCfgFileName
             if ( libraryName not in libcRelatedList and libraryName not in exceptList ):
                 if ( os.path.isfile(libraryCfgFilePath) ):
                     #We have the CFG for this library
-                    self.logger.info("The library call graph exists for: %s", libraryName)
+                    #self.logger.info("The library call graph exists for: %s", libraryName)
 
                     libraryGraph = graph.Graph(self.logger)
                     libraryGraph.createGraphFromInput(libraryCfgFilePath)
-                    self.logger.info("Finished create graph object for library: %s", libraryName)
+                    #self.logger.info("Finished create graph object for library: %s", libraryName)
                     libraryStartNodes = libraryGraph.extractStartingNodes()
-                    self.logger.info("Finished extracting start nodes for library: %s", libraryName)
+                    #self.logger.info("Finished extracting start nodes for library: %s", libraryName)
 
                     #We're going keep a copy of the full library call graph, for later stats creation
                     libraryCfgGraphs[libraryName] = libraryGraph
@@ -75,8 +75,8 @@ class Piecewise:
                     #libraryStartToEndGraph = graph.Graph(self.logger)
 
                     for startNode in libraryStartNodes:
-                        if ( startNodeToLibDict.get(startNode, None) ):
-                            self.logger.warning("library startNode seen in more than one library: %s and %s", libraryName, startNodeToLibDict[startNode])
+                        #if ( startNodeToLibDict.get(startNode, None) ):
+                        #    self.logger.warning("library startNode seen in more than one library: %s and %s", libraryName, startNodeToLibDict[startNode])
                         startNodeToLibDict[startNode] = libraryName
                         leaves = libraryGraph.getLeavesFromStartNode(startNode, list(), list())
                         for leaf in leaves:
@@ -86,17 +86,17 @@ class Piecewise:
                     #libraryGraphs[libraryName] = libraryStartToEndGraph
                 elif ( os.path.isfile(libPath) ):
                     #We don't have the CFG for this library, all exported functions will be considered as starting nodes in our final graph
-                    self.logger.info("The library call graph doesn't exist, considering all imported functions for: %s", libraryName)
+                    #self.logger.info("The library call graph doesn't exist, considering all imported functions for: %s", libraryName)
                     libraryProfiler = binaryAnalysis.BinaryAnalysis(libPath, self.logger)
                     directSyscallSet, successCount, failedCount  = libraryProfiler.extractDirectSyscalls()
                     indirectSyscallSet = libraryProfiler.extractIndirectSyscalls(libcGraph)
 
                     librarySyscalls.update(directSyscallSet)
                     librarySyscalls.update(indirectSyscallSet)
-                else:
-                    self.logger.warning("Skipping library: %s because path: %s doesn't exist", libraryName, libPath)
-            else:
-                self.logger.info("Skipping except list library: %s", libraryName)
+            #    else:
+                    #self.logger.warning("Skipping library: %s because path: %s doesn't exist", libraryName, libPath)
+            #else:
+            #    self.logger.info("Skipping except list library: %s", libraryName)
 
         return completeGraph, librarySyscalls, libraryCfgGraphs, libcGraph
 
@@ -107,19 +107,19 @@ class Piecewise:
         allVisitedNodes = set()
         accessibleSyscalls = set()
         for startNode in startNodes:
-            self.logger.debug("Iterating startNode: %s", startNode)
+            #self.logger.debug("Iterating startNode: %s", startNode)
             accessibleFuncs.update(completeGraph.getLeavesFromStartNode(startNode, list(), list()))
 
         for accessibleFunc in accessibleFuncs:
-            self.logger.debug("Iterating accessible function: %s", accessibleFunc)
+            #self.logger.debug("Iterating accessible function: %s", accessibleFunc)
             currentSyscalls, currentVisitedNodes = libcGraph.getSyscallFromStartNodeWithVisitedNodes(accessibleFunc)
             accessibleSyscalls.update(currentSyscalls)
             allVisitedNodes.update(currentVisitedNodes)
 
-        self.logger.info("Accessible system calls after library specialization: %d, %s", len(accessibleSyscalls), str(accessibleSyscalls))
-        self.logger.info("len(librarySyscalls): %d", len(librarySyscalls))
+        #self.logger.info("Accessible system calls after library specialization: %d, %s", len(accessibleSyscalls), str(accessibleSyscalls))
+        #self.logger.info("len(librarySyscalls): %d", len(librarySyscalls))
         accessibleSyscalls.update(librarySyscalls)
-        self.logger.info("Accessible system calls after adding libraries without cfg: %d, %s", len(accessibleSyscalls), str(accessibleSyscalls))
+        #self.logger.info("Accessible system calls after adding libraries without cfg: %d, %s", len(accessibleSyscalls), str(accessibleSyscalls))
         return accessibleSyscalls
 
     def extractAccessibleSystemCallsFromIndirectFunctions(self, directCfg, separator, exceptList=list()):
@@ -134,11 +134,11 @@ class Piecewise:
             accessibleFuncs = set()
             allVisitedNodes = set()
             accessibleSyscalls = set()
-            self.logger.debug("Iterating indirect-only function: %s", startNode)
+            #self.logger.debug("Iterating indirect-only function: %s", startNode)
             accessibleFuncs.update(completeGraph.getLeavesFromStartNode(startNode, list(), list(indirectFunctions)))
 
             for accessibleFunc in accessibleFuncs:
-                self.logger.debug("Iterating accessible function: %s", accessibleFunc)
+                #self.logger.debug("Iterating accessible function: %s", accessibleFunc)
                 currentSyscalls, currentVisitedNodes = libcGraph.getSyscallFromStartNodeWithVisitedNodes(accessibleFunc)
                 accessibleSyscalls.update(currentSyscalls)
                 allVisitedNodes.update(currentVisitedNodes)

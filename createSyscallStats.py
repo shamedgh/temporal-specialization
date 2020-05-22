@@ -173,7 +173,7 @@ if __name__ == "__main__":
                         directcfg = targetcfg.get("direct", None)
                         targetcfg = targetcfg.get("svftypefp", None)
 
-                        rootLogger.info("directCFG: %s temporalCFG: %s runtimeCFG: %s", directcfg, temporaltargetcfg, runtimecfg)
+                        #rootLogger.info("directCFG: %s temporalCFG: %s runtimeCFG: %s", directcfg, temporaltargetcfg, runtimecfg)
                     if ( not options.libdebloating ):
                         #TODO Some features have not been implemented in case of not using library debloating
                         if ( not os.path.exists(output) ):
@@ -215,7 +215,7 @@ if __name__ == "__main__":
                             exceptList.extend(uvRelatedList)
                             exceptList.extend(eventRelatedList)
 
-                            rootLogger.info("Piecewise enabled for %s", appName)
+                            #rootLogger.info("Piecewise enabled for %s", appName)
                             startFuncsStr = workermain
                             workerMainList = list()
                             if ( "," in startFuncsStr ):
@@ -230,29 +230,28 @@ if __name__ == "__main__":
                                 masterMainList.append(startFuncsStr)
 
                             importTableSyscalls = extractSyscallFromImportTable.processSyscalls(True, binbasepath + "/" + bininput, options.apptolibmap, appName, options.cfginput, options.debug, rootLogger)
-                            rootLogger.info("Finished extracting import table system calls with len: %d for %s", len(importTableSyscalls), appName)
+                            #rootLogger.info("Finished extracting import table system calls with len: %d for %s", len(importTableSyscalls), appName)
 
                             piecewiseObj = piecewise.Piecewise(binbasepath + "/" + bininput + "/" + appName, cfgbasepath + "/" + svftargetcfg, cfginput, options.othercfgpath, rootLogger, options.cfginputseparator)
                             piecewiseWorkerSyscalls = piecewiseObj.extractAccessibleSystemCalls(workerMainList, exceptList)
-                            rootLogger.info("Finished extracting piecewise worker system calls with len: %d for %s", len(piecewiseWorkerSyscalls), appName)
+                            #rootLogger.info("Finished extracting piecewise worker system calls with len: %d for %s", len(piecewiseWorkerSyscalls), appName)
                             piecewiseMasterSyscalls = piecewiseObj.extractAccessibleSystemCalls(masterMainList, exceptList)
-                            rootLogger.info("Finished extracting piecewise master system calls with len: %d for %s", len(piecewiseMasterSyscalls), appName)
+                            #rootLogger.info("Finished extracting piecewise master system calls with len: %d for %s", len(piecewiseMasterSyscalls), appName)
                             temporalObj = piecewise.Piecewise(binbasepath + "/" + bininput + "/" + appName, cfgbasepath + "/" + temporaltargetcfg, cfginput, options.othercfgpath, rootLogger, options.cfginputseparator)
                             temporalWorkerSyscalls = temporalObj.extractAccessibleSystemCalls(workerMainList, exceptList)
-                            rootLogger.info("Finished extracting temporal worker system calls with len: %d for %s", len(temporalWorkerSyscalls), appName)
+                            #rootLogger.info("Finished extracting temporal worker system calls with len: %d for %s", len(temporalWorkerSyscalls), appName)
                             temporalMasterSyscalls = temporalObj.extractAccessibleSystemCalls(masterMainList, exceptList)
 
                             if ( runtimecfg ):
                                 runtimeObj = piecewise.Piecewise(binbasepath + "/" + bininput + "/" + appName, cfgbasepath + "/" + runtimecfg, cfginput, options.othercfgpath, rootLogger, options.cfginputseparator)
                                 functionToSyscallMap = runtimeObj.extractAccessibleSystemCallsFromIndirectFunctions(cfgbasepath + "/" + directcfg, "->")
                                 runtimeWorkerSyscalls = runtimeObj.extractAccessibleSystemCalls(workerMainList, exceptList)
-                                rootLogger.info("Finished extracting temporal worker system calls on runtime CFG with len: %d for %s", len(runtimeWorkerSyscalls), appName)
+                                #rootLogger.info("Finished extracting temporal worker system calls on runtime CFG with len: %d for %s", len(runtimeWorkerSyscalls), appName)
                                 runtimeMasterSyscalls = runtimeObj.extractAccessibleSystemCalls(masterMainList, exceptList)
                                 for function, syscalls in functionToSyscallMap.items():
                                     rootLogger.info("function: %s syscalls: %s", function, str(syscalls))
-                                rootLogger.info("////////////////////////////////////////////appName: %s runtime: %d ////////////////////////////////////", appName, len(runtimeWorkerSyscalls))
+                                #rootLogger.info("////////////////////////////////////////////appName: %s runtime: %d ////////////////////////////////////", appName, len(runtimeWorkerSyscalls))
 
-                            rootLogger.info("////////////////////////////////////////////appName: %s libdebloating: %d temporal: %d ////////////////////////////////////", appName, len(piecewiseMasterSyscalls), len(temporalWorkerSyscalls))
 
                             importTableSyscallNames = set()
                             piecewiseWorkerSyscallNames = set()
@@ -333,8 +332,18 @@ if __name__ == "__main__":
                             sensitiveSyscallStatLine = "{};{};{};{}\n"
                             syscallReductionStatLine = "{};{};{};{};{};{}\n"
 
+                            rootLogger.info("////////////////////////////////////////////appName: %s libdebloating: %d temporal: %d ////////////////////////////////////", appName, len(piecewiseMasterSyscalls), len(temporalWorkerSyscalls))
+
                             syscallReductionFile.write(syscallReductionStatLine.format(appName, len(importTableSyscalls), len(piecewiseMasterSyscalls), len(piecewiseWorkerSyscalls), len(temporalMasterSyscalls), len(temporalWorkerSyscalls)))
                             syscallReductionFile.flush()
+
+                            #Write result similar to TABLE2 in paper to file
+                            syscallCountOutputFile = open(options.outputpath + "/syscall.count-TABLE2.out", 'w')
+                            syscallCountOutputFile.write("application;libdebloating;temporal-init;temporal-serving\n")
+                            syscallCountOutputFile.flush()
+                            syscallCountOutputFile.write(appName + ";" + str(len(piecewiseMasterSyscalls)) + ";" + str(len(temporalMasterSyscalls)) + ";" + str(len(temporalWorkerSyscalls)) + "\n")
+                            syscallCountOutputFile.flush()
+                            syscallCountOutputFile.close()
 
                             for syscall in sensitiveSyscallSet:
                                 if ( syscall in importTableSyscalls ):

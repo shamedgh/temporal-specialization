@@ -1,6 +1,6 @@
 {
-    "sec-eval-lib-output": "security-evaluation/removedViaLibSpecialization.txt",
-    "sec-eval-temporal-output": "security-evaluation/removedViaTemporalDebloating.txt",
+    "sec-eval-lib-output": "security-evaluation/removedViaLibDebloating.txt",
+    "sec-eval-temporal-output": "security-evaluation/removedViaTemporalSpecialization.txt",
     "apps": [
         {
             "httpd": 
@@ -86,48 +86,6 @@
                     "worker": "isc_app_ctxrun",
                     "bininput": "bind/",
                     "output": "bind.syscall.out"
-                },
-            "smtpd": 
-                {
-                    "enable": "false",
-                    "cfg": {
-                            "direct" : "smtpd.libevent.svf.conditional.direct.calls.cfg",
-                            "svf" : "smtpd.libevent.svf.cfg",
-                            "svftype" : "smtpd.libevent.svf.type.cfg",
-                            "svftypefp" : "smtpd.libevent.svf.new.type.fp.wglobal.cfg"
-                           },
-                    "master": "main",
-                    "worker": "control",
-                    "bininput": "smtpd/",
-                    "output": "smtpd.syscall.out"
-                },
-            "vsftpd": 
-                {
-                    "enable": "false",
-                    "cfg": {
-                            "direct" : "vsftpd.svf.conditional.direct.calls.cfg",
-                            "svf" : "vsftpd.svf.cfg",
-                            "svftype" : "vsftpd.svf.type.cfg",
-                            "svftypefp" : "vsftpd.svf.type.fp.cfg"
-                           },
-                    "master": "main",
-                    "worker": "one_process_start",
-                    "bininput": "vsftpd/",
-                    "output": "vsftpd.syscall.out"
-                },
-            "mysqld":  
-                {
-                    "enable": "false",
-                    "cfg": {
-                            "direct" : "httpd.apr.svf.conditional.direct.calls.cfg",
-                            "svf" : "httpd.apr.svf.cfg",
-                            "svftype" : "httpd.apr.svf.type.cfg",
-                            "svftypefp" : "httpd.apr.svf.type.fp.cfg"
-                           },
-                    "master": "main",
-                    "worker": "child_main",
-                    "bininput": "httpd/",
-                    "output": "httpd.syscall.out"
                 }
         }
     ]
