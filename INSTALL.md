@@ -251,12 +251,12 @@ the application will still be read from the JSON file.
 
 ## 5. Security Evaluation
 
-For security evaluation, we collected a set of 547 shellcodes payloads and 17 
+In the submitted version of our paper, for security evaluation, 
+we collected a set of 547 shellcodes payloads and 17 
 ROP payloads. Using equivalence classes mentioned in the paper, a total of 
-1726 shellcodes were generated. To run tests for applications, refer to 
-security-evaluation/README.md.
+1726 shellcodes were generated. To run tests for applications, refer [here](security-evaluation/README.md).
 
-Note that we have extended our payload database since the paper submission.
+We have extended our payload database since the paper submission.
 While the number of tested payloads in the paper is 566, in the camera-ready
 version we plan to include results from our latest set which has 1726
 shellcodes. Similarly, for ROP payloads we have extended our payload set from 13
