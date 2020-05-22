@@ -38,6 +38,7 @@ these bitcodes from scratch in *TODO*
 The source code along with all the helper scripts are part of this repo. The
 important directories and files are ---
 * **SVF/**: Contains the modified SVF implementation that we use
+* **application-sourcecodes/**: Contains the source code of the applications
 * **bitcodes/**: Contains the pre-generated full bitcodes of the applications
 * **callgraphs/**: The intermediate and final callgraphs are generated here
 * **docker-build/**: Contains the Dockerfile and scripts required to build the
@@ -75,25 +76,34 @@ configuration on your system)
 This will pull the container image and launch it. Then, for each application,
 simply run the following commands, at the command line ---
 
+**Note: Keep in mind that the analysis time varies depending on the complexity
+of the application and how large its code base is. We have given estimates on
+how long each takes. If it takes long do not worry, it is still running**
+
 ```
 docker exec -it artifact-eval ./run.sh memcached.libevent
 ```
+**Estimated Time Required: 10 minutes**
 
 ```
 docker exec -it artifact-eval ./run.sh httpd.apr
 ```
+**Estimated Time Required: 10 minutes**
 
 ```
 docker exec -it artifact-eval ./run.sh nginx
 ```
+**Estimated Time Required: 90 minutes**
 
 ```
 docker exec -it artifact-eval ./run.sh lighttpd 
 ```
+**Estimated Time Required: 10 minutes**
 
 ```
 docker exec -it artifact-eval ./run.sh redis-server
 ```
+**Estimated Time Required: 15 minutes**
 
 The results for the analysis will be stored in the path provided in
 \<full\_path\_of\_results\_dir\>, in the form
@@ -104,8 +114,18 @@ changed slightly. But the results are generally similar, and the trends observed
 reported continue -- temporal specialization outperforms library debloating.)
 
 The file \<app\_name\>.sensitive.stats shows the statistics of the sensitive
-system calls that are filtered. This corresponds to Table 3 in our paper. The
-file <app\_name>.syscall.count corresponds to Table 2 in our paper. 
+system calls that are filtered. This corresponds to Table 3 in our paper. 
+Keep in mind that each line in the sensitive.stats file has the following
+format:
+```
+syscall-name;application;debloat-type;1|0
+```
+To match each line with the table you should only consider the two
+debloat-types piecewise-master for library debloating and temporal-worker for
+temporal. 1 means the system call is required and 0 means that it is not
+required. 
+**So 0 is good. 0 means that we can filter that sensitive system call.**
+The file <app\_name>.syscall.count corresponds to Table 2 in our paper. 
 
 To re-run an analysis, the easiest way is to kill the container and start
 afresh. The command to do that is:
