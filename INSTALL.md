@@ -86,9 +86,11 @@ which wpa
 ```
 It should return the path to the wpa binary.
 You should run the following command to generate the call graph in the DOT
-format.
+format. Since you have added *wpa* to your PATH environment variable, you 
+can run it from anywhere, but keep in mind that the **bitcodes** folder is 
+in the root of the repository.
 ```
-wpa -print-fp -ander -dump-callgraph ./bitcodes/httpd.apr.bc
+wpa -print-fp -ander -dump-callgraph [REPO_ROOT_DIR]/bitcodes/httpd.apr.bc
 ```
 It should take around 15 minutes to run for Apache httpd mentioned
 above. But it can vary depending on the application.
@@ -99,7 +101,7 @@ To convert it to a more
 human-readable format we use
 the convertSvfCfgToHumanReadable.py script.
 ```
-python3.7 convertSvfCfgToHumanReadable.py callgraph_final.dot > callgraphs/httpd.apr.svf.type.cfg
+python3.7 convertSvfCfgToHumanReadable.py callgraph_final.dot > [REPO_ROOT_DIR]/callgraphs/httpd.apr.svf.type.cfg
 ```
 
 We need this generated call graph for our final analysis where we identify
@@ -113,7 +115,7 @@ We have generated a simple program analysis tool (spa) which is an LLVM pass
 in our modified SVF repository.
 
 ```
-spa -condition-cfg ./bitcodes/httpd.apr.bc 2>&1 | tee httpd.apr.svf.conditional.direct.calls.cfg
+spa -condition-cfg [REPO_ROOT_DIR]/bitcodes/httpd.apr.bc 2>&1 | tee [REPO_ROOT_DIR]/callgraphs/httpd.apr.svf.conditional.direct.calls.cfg
 ```
 
 We need this call graph for pruning the inaccessible targets of callsites.
@@ -128,7 +130,7 @@ The following command can be used to parse the application bitcode and
 generate the function pointer allocation file.
 
 ```
-spa -simple ./bitcodes/httpd.apr.bc 2>&1 | tee httpd.apr.svf.function.pointer.allocations.wglobal.cfg
+spa -simple [REPO_ROOT_DIR]/bitcodes/httpd.apr.bc 2>&1 | tee [REPO_ROOT_DIR]/callgraphs/httpd.apr.svf.function.pointer.allocations.wglobal.cfg
 ```
 
 We will use the combination of this file and the file generated in the
@@ -139,15 +141,23 @@ After generating the required call graphs through LLVM passes we use python
 scripts to combine the graphs and identify which system calls can be futher 
 filtered in the serving phase.
 
+**Note:** The scripts are spread among different subfolders in the root 
+of the repository. This is due to the fact that some scripts are shared 
+between different projects and exist as separate git repositories. We 
+have specified the subfolder where each script is located in its respective 
+subsection.
+
 ### Call Function Pointer Target Pruning (callgraph-final)
 We first have to merge all the previously generated call graphs into our final
-call graph which has its inaccessible callsite targets pruned. 
+call graph which has its inaccessible callsite targets pruned. This is a 
+general-purpose script which can be used along with other graph tools which 
+are all located in the *python-utils* subdirectory in the repository.
 
 For this, we use the following script. We need to pass the name of the function name 
 which starts executing upon when the application is run. This is provided using 
 --funcname argument.
 ```
-python3.7 graphCleaner.py --fpanalysis --funcname main --output callgraphs/httpd.apr.svf.new.type.fp.wglobal.cfg --directgraphfile callgraphs/httpd.apr.svf.conditional.direct.calls.cfg --funcpointerfile callgraphs/httpd.apr.svf.function.pointer.allocations.wglobal.cfg -c callgraphs/httpd.apr.svf.type.cfg
+python3.7 [REPO_ROOT_DIR]/python-utils/graphCleaner.py --fpanalysis --funcname main --output [REPO_ROOT_DIR]/callgraphs/httpd.apr.svf.new.type.fp.wglobal.cfg --directgraphfile [REPO_ROOT_DIR]/callgraphs/httpd.apr.svf.conditional.direct.calls.cfg --funcpointerfile [REPO_ROOT_DIR]/callgraphs/httpd.apr.svf.function.pointer.allocations.wglobal.cfg -c [REPO_ROOT_DIR]callgraphs/httpd.apr.svf.type.cfg
 ```
 Arguments:
 
@@ -169,6 +179,8 @@ type-based pruning (**callgraph-wtype-based**)
 In this step we use the final call graph along with other artifacts generated
 beforehand to create the final list of system calls which can be filtered
 after the application enters the serving phase.
+This script has specifically developed for the purposes of this project, so 
+it can be found at the root of the repository.
 
 This script has a configuration file which needs to be modified to correspond
 to the filenames used in the previous sections. In case you have used the
@@ -181,7 +193,7 @@ app.to.properties.json.
 ```
 mkdir outputs
 mkdir stats
-python3.7 createSyscallStats.py -c ./callgraphs/glibc.callgraph --apptopropertymap app.to.properties.json --binpath ./binaries --outputpath outputs/ --apptolibmap app.to.lib.map.json --sensitivesyscalls sensitive.syscalls --sensitivestatspath stats/sensitive.stats --syscallreductionpath stats/syscallreduction.stats --libdebloating --othercfgpath ./otherCfgs/ --cfgpath callgraphs
+python3.7 [REPO_ROOT_DIR]/createSyscallStats.py -c [REPO_ROOT_DIR]/callgraphs/glibc.callgraph --apptopropertymap [REPO_ROOT_DIR]/app.to.properties.json --binpath [REPO_ROOT_DIR]/binaries --outputpath [REPO_ROOT_DIR]/outputs/ --apptolibmap [REPO_ROOT_DIR]/app.to.lib.map.json --sensitivesyscalls [REPO_ROOT_DIR]/sensitive.syscalls --sensitivestatspath [REPO_ROOT_DIR]/stats/sensitive.stats --syscallreductionpath [REPO_ROOT_DIR]/stats/syscallreduction.stats --libdebloating --othercfgpath [REPO_ROOT_DIR]/otherCfgs/ --cfgpath [REPO_ROOT_DIR]/callgraphs
 ```
 We will describe each argument in the following sections.
 
