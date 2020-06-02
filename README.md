@@ -47,6 +47,7 @@ important directories and files are ---
 * **security-evaluation/**: Contains scripts that perform the security
   evaluation
 * **llvm-7.0.0.src.wclang.tar.xz**: The LLVM+Clang source code
+* **stats**: The default path used in the scripts for storing the statistics outputs
 
 ## Running the Docker container
 
