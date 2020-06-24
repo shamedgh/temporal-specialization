@@ -1,8 +1,8 @@
-# Artifacts Evaluation for Temporal Specialization
+# Temporal Specialization
 
-This repository has been created for the Artifact Evaluation process of Usenix
-Security 2020 for the paper *Temporal System Call Specialization for Attack Surface 
-Reduction*. 
+This repository has been created to help reproduce the results presented in our 
+paper *Temporal System Call Specialization for Attack Surface Reduction* presented 
+at the 29th Usenix Security Symposium.
 We have provided the resources to reproduce the main 
 results presented in the paper. 
 
@@ -156,3 +156,12 @@ bitcode for our analysis toolchain.
 ## Security evaluation details
 See [here](security-evaluation/README.md) for more details about our security
 evaluation scripts.
+
+```
+@inproceedings{temporal2020ghavamnia,
+  title={Temporal System Call Specialization for Attack Surface Reduction},
+  author={Ghavamnia, Seyedhamed and Palit, Tapti and Mishra, Shachee and Polychronakis, Michalis},
+  booktitle={Proceedings of the 29th Usenix Security Symposium},
+  year={2020}
+}
+```
