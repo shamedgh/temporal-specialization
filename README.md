@@ -157,6 +157,7 @@ bitcode for our analysis toolchain.
 See [here](security-evaluation/README.md) for more details about our security
 evaluation scripts.
 
+## Cite our work
 ```
 @inproceedings{temporal2020ghavamnia,
   title={Temporal System Call Specialization for Attack Surface Reduction},
