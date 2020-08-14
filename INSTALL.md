@@ -15,7 +15,7 @@ analysis.
 This repository has multiple submodules which must be loaded using the
 following command:
 ```
-git clone https://github.com/shamedgh/temporal-specialization-artifacts
+git clone https://github.com/shamedgh/temporal-specialization
 git submodule update --init --recursive
 ```
 
