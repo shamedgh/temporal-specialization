@@ -20,14 +20,30 @@ git submodule update --init --recursive
 ```
 
 ## 2. LLVM Passes
-LLVM and Clang must be compiled from source and installed in a path that 
+LLVM and Clang must be compiled from source and installed in a path that the system can use.
+In case you want to generate bitcode files, you need to install the gold linker. we have 
+provided the steps required to compile ld.gold from source [taken from here](https://llvm.org/docs/GoldPlugin.html):
+This does not need to be done in the temporal-specialization folder.
+```
+git clone --depth 1 git://sourceware.org/git/binutils-gdb.git binutils
+mkdir build
+cd build
+../binutils/configure --enable-gold --enable-plugins --disable-werror
+make all-gold
+```
+
+This can take some while. After the linker has been compiled you should compile LLVM 
+using the following steps. If you do not need ld.gold later you can remove 
+**-DLLVM_BINUTILS_INCDIR=/path/to/binutils/include** from the cmake command:
+(The correct include path for the LLVM_BINUTILS_INCDIR option will contain 
+the file plugin-api.h)
 
 ```
 tar -Jxvf llvm-7.0.0.src.wclang.tar.xz   
 cd llvm-7.0.0.src/
 mkdir build/
 cd build
-cmake -G "Unix Makefiles" -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install ../
+cmake -G "Unix Makefiles" -DLLVM_BINUTILS_INCDIR=/path/to/binutils/include -DLLVM_TARGETS_TO_BUILD="X86" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=../install ../
 make -j<number_of_cores> && make install
 ```
 
